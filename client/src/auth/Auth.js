@@ -1,6 +1,6 @@
 import auth0 from 'auth0-js';
 import { authConfig } from '../config';
-import { setToken } from './token';
+import { removeToken, setToken } from './token';
 
 export default class Auth {
   accessToken;
@@ -12,7 +12,6 @@ export default class Auth {
     clientID: authConfig.clientId,
     redirectUri: authConfig.callbackUrl,
     responseType: 'token id_token',
-    scope: 'openid'
   });
 
   constructor(history) {
@@ -34,6 +33,7 @@ export default class Auth {
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
+        console.log(authResult);
         console.log('Access token: ', authResult.accessToken)
         setToken(authResult)
         console.log('id token: ', authResult.idToken)
@@ -99,13 +99,12 @@ export default class Auth {
     this.accessToken = null;
     this.idToken = null;
     this.expiresAt = 0;
-
+    removeToken()
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
-
-    this.auth0.logout({
-      return_to: window.location.origin
-    });
+    // this.auth0.logout({
+    //   return_to: window.location.origin
+    // });
 
     // navigate to the home route
     this.history.replace('/');

@@ -6,7 +6,12 @@ function getToken(){
     return JSON.parse(window?.localStorage.getItem("accessToken"))
 }
 
+function removeToken(){
+    return window?.localStorage.removeItem("accessToken")
+}
+
 export {
     setToken,
-    getToken
+    getToken,
+    removeToken
 }

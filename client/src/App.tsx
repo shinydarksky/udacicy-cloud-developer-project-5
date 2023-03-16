@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Link, Route, Router, Switch } from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
@@ -7,6 +7,8 @@ import { getToken } from './auth/token'
 import { EditTodo } from './components/EditTodo'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
+import TopNav from './components/TopNav'
+import Profile from './views/Profile'
 import { Todos } from './views/Todos'
 
 export interface AppProps {}
@@ -44,13 +46,16 @@ export default class App extends Component<AppProps, AppState> {
   render() {
     return (
       <div>
-        <Segment style={{ padding: '8em 0em' }} vertical>
+        <Segment  vertical>
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>
               <Grid.Column width={16}>
                 <Router history={this.props.history}>
-                  {this.generateMenu()}
-
+                  {/* {this.generateMenu()} */}
+                  <TopNav
+                    history={this.props.history}
+                    onLogout={this.handleLogout}
+                  />
                   {this.generateCurrentPage()}
                 </Router>
               </Grid.Column>
@@ -111,7 +116,13 @@ export default class App extends Component<AppProps, AppState> {
             return <EditTodo {...props} auth={this.props.auth} />
           }}
         />
-
+        <Route
+          path="/profile"
+          exact
+          render={props => {
+            return <Profile {...props} auth={this.props.auth} />
+          }}
+        />
         <Route component={NotFound} />
       </Switch>
     )
