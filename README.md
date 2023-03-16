@@ -2,6 +2,7 @@
 ~/.aws/config -->
 
 ### New feature:
+- I have some upgrade about FE and BE about pagination todo list.
 - Login by Auth0.
 - Keep user profile when reloading browser
 - Searching todo item
@@ -34,6 +35,8 @@ serverless deploy --verbose or sls deploy
 
 ### home page 
 ![alt text](screenshots/step1.png)
+
+![alt text](screenshots/step5.png)
 
 ![alt text](screenshots/step2.png)
 
