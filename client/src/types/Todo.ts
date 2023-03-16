@@ -10,6 +10,7 @@ export interface TodoItem {
 
 export interface GetTodosResp {
   todoList: TodoItem[];
+  nextKey:string
 }
 
 export interface GetTodoResp {

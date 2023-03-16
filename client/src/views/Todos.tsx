@@ -8,7 +8,8 @@ import {
   Header,
   Input,
   Loader,
-  Form
+  Form,
+  Button
 } from 'semantic-ui-react';
 
 import { createTodo, deleteTodo, getTodos, updateTodo } from '../api/todos-api';
@@ -20,21 +21,32 @@ interface TodosProps {
   auth: Auth;
   history: History;
 }
+
+
 interface TodosState {
   todos: TodoItem[];
   newTodoName: string;
   loadingTodos: boolean;
+  nextKey:string,
+  nextKeyList: Array<any>
+  limit:number
 }
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
-    loadingTodos: true
+    loadingTodos: true,
+    nextKey:'',
+    nextKeyList: [],
+    limit:5,
   };
 
   async componentDidMount() {
     try {
-      const todos = await getTodos(this.props.auth.getIdToken());
+      const todos:any = await getTodos(this.props.auth.getIdToken(),{
+        nextKey:this.state.nextKey,
+        limit:this.state.limit,
+      });
 
       const token = this.props.auth.accessToken
       const myHeaders = new Headers();
@@ -54,7 +66,8 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
         .catch(error => console.log('error', error));
 
       this.setState({
-        todos,
+        todos:todos.todoList,
+        nextKey:todos.nextKey,
         loadingTodos: false
       });
     } catch (error:any) {
@@ -122,15 +135,47 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     }
   };
 
+  handleClickPrev = async () =>{
+      const nextKey = this.state.nextKeyList.pop();
+      this.setState({loadingTodos:true})
+      const todos:any = await getTodos(this.props.auth.getIdToken(),{
+        nextKey: this.state.nextKeyList.at(-1) || '',
+        limit:this.state.limit,
+      });
+      this.setState({
+        todos:todos.todoList,
+        nextKey: nextKey,
+        loadingTodos: false
+    });
+  }
+
+  handleNextPage = async () =>{
+    this.setState({loadingTodos:true})
+    const todos:any = await getTodos(this.props.auth.getIdToken(),{
+      nextKey:this.state.nextKey,
+      limit:this.state.limit,
+    });
+    this.setState({
+        todos:todos.todoList,
+        nextKey:todos.nextKey,
+        nextKeyList:[...this.state.nextKeyList,this.state.nextKey],
+        loadingTodos: false
+    });
+  }
+
   render() {
     const {profile} = this.state
-
+    console.log(this.state);
+    
     return (
       <div>
         <Header as="h1">TODOs</Header>
         <Header as="h2">Hi: {profile?.name}</Header>
+        
         {this.renderCreateTodoInput()}
-
+        <Button disabled={!(this.state.nextKeyList.length>0)} onClick={this.handleClickPrev}>Previous</Button>
+          {this.state.nextKeyList.length + 1 } &nbsp;
+        <Button onClick={this.handleNextPage}>Next</Button>
         {this.renderTodos()}
       </div>
     );

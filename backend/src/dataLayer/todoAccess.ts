@@ -3,6 +3,7 @@ import * as AWSXRay from 'aws-xray-sdk';
 import { createLogger } from '../utils/logger';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { TodoItem, TodoUpdate } from '../models/Todo.d';
+import { encodeNextKey } from './utils';
 
 const XAWS = AWSXRay.captureAWS(AWS);
 const logger = createLogger('todoAccess');
@@ -13,18 +14,35 @@ export class TodoAccess {
     private readonly todosTable = process.env.TODOS_TABLE
   ) {}
 
-  async getTodos(userId: string): Promise<TodoItem[]> {
+  async getTodos(userId: string,nextKey, limit, orderBy): Promise<{
+    todoList: TodoItem[],
+    nextKey:string
+  }> {
     logger.info('Getting all todo items');
-    const result = await this.docClient
-      .query({
-        TableName: this.todosTable,
-        KeyConditionExpression: 'userId = :userId',
-        ExpressionAttributeValues: {
-          ':userId': userId
-        }
-      })
-      .promise();
-    return result.Items as TodoItem[];
+    // Order by created date by default
+    let indexName = process.env.TODOS_CREATED_AT_INDEX;
+    if (!!orderBy && orderBy === "dueDate") {
+        indexName = process.env.TODOS_DUE_DATE_INDEX; 
+    }
+
+    const params = {
+      TableName: this.todosTable,
+      IndexName: indexName,
+      KeyConditionExpression: 'userId = :userId',
+      ExpressionAttributeValues: {
+        ':userId': userId
+      },
+      Limit: limit,
+      ScanIndexForward: false,
+      ExclusiveStartKey: nextKey
+    };
+    console.log("===============================>",limit,nextKey);
+    
+    const result = await this.docClient.query(params).promise();
+    return {
+      todoList: result.Items as TodoItem[],
+      nextKey: encodeNextKey(result.LastEvaluatedKey)
+    };
   }
 
   async getTodo(userId: string, todoId: string): Promise<TodoItem> {

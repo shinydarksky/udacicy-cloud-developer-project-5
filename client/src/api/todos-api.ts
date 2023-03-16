@@ -23,17 +23,26 @@ async function axRequest<ReqData, RespData>(
     'Content-Type': 'application/json',
     Authorization: `Bearer ${idToken}`
   };
+  
+  
   return Axios({ method, url, headers, data });
 }
 
-export async function getTodos(idToken: string): Promise<TodoItem[]> {
+export async function getTodos(idToken: string,data:any): Promise<{
+  todoList: TodoItem[],
+  nextKey:string
+}> {
+  
   const response: AxiosResponse<GetTodosResp> = await axRequest<null, GetTodosResp>(
     idToken,
-    'todos',
+    'todos'+`?limit=${data.limit}&nextKey=${data.nextKey}`,
     'GET',
-    null
+    null,
   );
-  return response.data.todoList;
+  return {
+    todoList:response.data.todoList,
+    nextKey:response.data.nextKey
+  };
 }
 
 export async function getTodo(idToken: string, todoId: string): Promise<TodoItem> {

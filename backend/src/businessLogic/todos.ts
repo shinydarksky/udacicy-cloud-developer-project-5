@@ -6,9 +6,12 @@ import { TodoItem, TodoCreate, TodoUpdate } from '../models/Todo.d';
 
 const todoAccess = new TodoAccess();
 
-export async function getTodos(jwtToken: string): Promise<TodoItem[]> {
+export async function getTodos(jwtToken: string, nextKey, limit, orderBy): Promise<{
+  todoList: TodoItem[],
+  nextKey:string
+}> {
   const userId: string = getUserId(jwtToken);
-  return todoAccess.getTodos(userId);
+  return todoAccess.getTodos(userId, nextKey, limit, orderBy);
 }
 
 export async function getTodo(jwtToken: string, todoId: string): Promise<TodoItem> {
