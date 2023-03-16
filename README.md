@@ -1,8 +1,16 @@
-#### config credentials
 <!-- ~/.aws/credentials
 ~/.aws/config -->
 
-# udacicy-cloud-developer-project-4
+### New feature:
+- Login by Auth0.
+- Keep user profile when reloading browser
+- Searching todo item
+- Get user profile when you login
+
+
+#### Api serverless
+https://ouxph7pph7.execute-api.us-east-1.amazonaws.com/dev/todos
+# udacicy-cloud-developer-project-5
 To build this project you need to using old version of NodeJS.
 Recommend Node v14.21.3 .
 
@@ -23,24 +31,15 @@ serverless deploy --verbose or sls deploy
 
 ## Some thing:
 
-CloudFormation
-![alt text](screenshots/CloudFormation.png)
 
-Auth0
-![alt text](screenshots/Auth0.png)
+### home page 
+![alt text](screenshots/step1.png)
 
-HomePage
-![alt text](screenshots/HomePage.png)
+![alt text](screenshots/step2.png)
 
-Auth0 login page    
-![alt text](screenshots/Auth0-Login.png)
+![alt text](screenshots/step3.png)
 
-Add new item   
-![alt text](screenshots/New-Item.png)
+![alt text](screenshots/step4.png)
 
-Edit item   
-![alt text](screenshots/Edit-Item.png)
 
-Updated item   
-![alt text](screenshots/Updated-Item.png)
 

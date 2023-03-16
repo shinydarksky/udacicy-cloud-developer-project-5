@@ -35,6 +35,24 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   async componentDidMount() {
     try {
       const todos = await getTodos(this.props.auth.getIdToken());
+
+      const token = this.props.auth.accessToken
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+
+      fetch("https://dev-tkib8gnatghhblhe.us.auth0.com/userinfo", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          this.setState({profile:result})
+        })
+        .catch(error => console.log('error', error));
+
       this.setState({
         todos,
         loadingTodos: false
@@ -105,10 +123,12 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   };
 
   render() {
+    const {profile} = this.state
+
     return (
       <div>
         <Header as="h1">TODOs</Header>
-        
+        <Header as="h2">Hi: {profile?.name}</Header>
         {this.renderCreateTodoInput()}
 
         {this.renderTodos()}

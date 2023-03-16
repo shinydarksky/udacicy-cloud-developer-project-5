@@ -12,15 +12,15 @@ import About from './views/About'
 import Profile from './views/Profile'
 import { Todos } from './views/Todos'
 
-export interface AppProps {}
+export interface AppProps { }
 
 export interface AppProps {
   auth: Auth
   history: any,
-  setLogin(token:any):void
+  setLogin(token: any): void
 }
 
-export interface AppState {}
+export interface AppState { }
 
 export default class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -47,7 +47,7 @@ export default class App extends Component<AppProps, AppState> {
   render() {
     return (
       <div>
-        <Segment  vertical>
+        <Segment vertical>
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>
               <Grid.Column width={16}>
@@ -125,13 +125,13 @@ export default class App extends Component<AppProps, AppState> {
             return <Profile {...props} auth={this.props.auth} />
           }}
         />
-         <Route
-                    path="/about"
-                    exact
-                    render={props => {
-                      return <About {...props} auth={this.props.auth} />
-                    }}
-                  />
+        <Route
+          path="/about"
+          exact
+          render={props => {
+            return <About {...props} />
+          }}
+        />
         <Route component={NotFound} />
       </Switch>
     )
