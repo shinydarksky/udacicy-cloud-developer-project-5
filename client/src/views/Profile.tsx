@@ -1,8 +1,8 @@
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, Icon, Image } from 'semantic-ui-react'
 
 export default function Profile({ auth }: any) {
-    const [profile,setProfile] = useState<any>({})
+    const [profile, setProfile] = useState<any>(null)
     useEffect(() => {
         const token = auth.accessToken
         const myHeaders = new Headers();
@@ -20,20 +20,19 @@ export default function Profile({ auth }: any) {
             .catch(error => console.log('error', error));
     }, [])
 
-    console.log(profile);
-    
     return (
-        <Card>
-            <img src={profile.picture} loading="lazy" referrerpolicy="no-referrer"/>
-            <Card.Content>
-                <Card.Header>{profile.name} <small>({profile.nickname})</small></Card.Header>
-                <Card.Meta>
-                    <span className='date'>{profile.email}</span>
-                </Card.Meta>
-                <Card.Description>
-                    Matthew is a musician living in Nashville.
-                </Card.Description>
-            </Card.Content>
-        </Card>
+        <div className="profile-wrapper">
+            {profile &&
+                <Card>
+                    <img src={profile.picture} loading="lazy" referrerPolicy="no-referrer" />
+                    <Card.Content>
+                        <Card.Header>{profile.name} <small>({profile.nickname})</small></Card.Header>
+                        <Card.Meta>
+                            <span className='date'>{profile.email}</span>
+                        </Card.Meta>
+                    </Card.Content>
+                </Card>
+            }
+        </div>
     )
 }

@@ -133,6 +133,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
               actionPosition="left"
               placeholder="To change the world..."
               onChange={this.handleNameChange}
+              value={this.state.newTodoName}
 
             />
           </Form.Field>
@@ -154,11 +155,9 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   renderLoading() {
     return (
-      <Grid.Row>
-        <Loader indeterminate active inline="centered">
+        <Loader className="fullscreen" indeterminate active inline="centered">
           Loading TODOs
         </Loader>
-      </Grid.Row>
     );
   }
 

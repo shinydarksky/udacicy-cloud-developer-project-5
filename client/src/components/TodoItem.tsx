@@ -1,32 +1,58 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button, Checkbox, Divider, Grid, Icon, Image } from 'semantic-ui-react';
 import ModalConfirm from './ModalConfirm';
+import {
+
+    useLocation
+} from "react-router-dom";
+
+function useQuery() {
+    const { search } = useLocation();
+
+    return useMemo(() => new URLSearchParams(search), [search]);
+}
 
 export default function TodoItem({ todos, onTodoDelete, onEditButtonClick, onTodoCheck }: any) {
-    const [openConfirm,setOpenConfirm] = useState(false)
-    const [deleteItem,setDeleteItem] = useState<{id?:string,createdAt?:string}>({})
+    const [openConfirm, setOpenConfirm] = useState(false)
+    const [deleteItem, setDeleteItem] = useState<{ id?: string, createdAt?: string }>({})
+
+    let query = useQuery();
+    const searchQuery = query.get('search')
+
+
 
     function onClickDelete(id: any, createdAt: any) {
         setOpenConfirm(true)
-        setDeleteItem({id,createdAt})
+        setDeleteItem({ id, createdAt })
+    }
+
+    const searchFilter = (todo: any) => {
+
+        if (searchQuery?.trim().length <= 0 || !searchQuery) return todo
+        else {
+            const nameSearch = todo.name.toLowerCase()
+            const searchString = searchQuery.toLowerCase()
+            return nameSearch.search(searchString) >= 0
+        }
     }
 
     return (
         <>
-           <ModalConfirm 
+            <ModalConfirm
                 isOpen={openConfirm}
-                onClose={()=>{
+                onClose={() => {
                     setOpenConfirm(false)
                     setDeleteItem({})
                 }}
-                onConfirm={()=>{
+                onConfirm={() => {
                     setDeleteItem({})
                     setOpenConfirm(false)
-                    onTodoDelete(deleteItem.id,deleteItem.createdAt)
+                    onTodoDelete(deleteItem.id, deleteItem.createdAt)
                 }}
             />
             <Grid padded>
-                {todos.map((todo: any, pos: any) => {
+                {todos.filter(searchFilter).map((todo: any, pos: any) => {
+
                     return (
                         <Grid.Row key={todo.todoId}>
                             <Grid.Column width={1} verticalAlign="middle">
@@ -34,6 +60,14 @@ export default function TodoItem({ todos, onTodoDelete, onEditButtonClick, onTod
                             </Grid.Column>
                             <Grid.Column width={10} verticalAlign="middle">
                                 {todo.name}
+                                {todo.attachmentUrl && 
+                                    <Image
+                                        className='image-todo is-desktop'
+                                        src={todo.attachmentUrl}
+                                        size="small"
+                                        wrapped 
+
+                                 />}
                             </Grid.Column>
                             <Grid.Column width={3} floated="right">
                                 {todo.dueDate}
@@ -52,7 +86,7 @@ export default function TodoItem({ todos, onTodoDelete, onEditButtonClick, onTod
                                     <Icon name="delete" />
                                 </Button>
                             </Grid.Column>
-                            {todo.attachmentUrl && <Image className='image-todo' src={todo.attachmentUrl} size="small" wrapped />}
+                            {todo.attachmentUrl && <Image className='image-todo is-mobile' src={todo.attachmentUrl} size="small" wrapped />}
                             <Grid.Column width={16}>
                                 <Divider />
                             </Grid.Column>

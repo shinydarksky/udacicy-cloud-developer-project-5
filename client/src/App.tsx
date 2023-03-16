@@ -8,6 +8,7 @@ import { EditTodo } from './components/EditTodo'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import TopNav from './components/TopNav'
+import About from './views/About'
 import Profile from './views/Profile'
 import { Todos } from './views/Todos'
 
@@ -55,6 +56,7 @@ export default class App extends Component<AppProps, AppState> {
                   <TopNav
                     history={this.props.history}
                     onLogout={this.handleLogout}
+                    auth={this.props.auth}
                   />
                   {this.generateCurrentPage()}
                 </Router>
@@ -123,6 +125,13 @@ export default class App extends Component<AppProps, AppState> {
             return <Profile {...props} auth={this.props.auth} />
           }}
         />
+         <Route
+                    path="/about"
+                    exact
+                    render={props => {
+                      return <About {...props} auth={this.props.auth} />
+                    }}
+                  />
         <Route component={NotFound} />
       </Switch>
     )

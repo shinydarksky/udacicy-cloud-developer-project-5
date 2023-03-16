@@ -1,1 +1,25 @@
 @import "./todo";
+@import "./login";
+@import "./profile";
+
+.is-mobile{
+    display: none !important;
+}
+
+.input-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .btn-upload{
+        margin-left: 10px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .is-desktop{
+        display: none !important;
+    }
+    .is-mobile{
+        display:block !important;
+    }
+}

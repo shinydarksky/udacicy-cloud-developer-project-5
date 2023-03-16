@@ -1,7 +1,12 @@
+
+.image-todo{
+    margin-left: 20px;
+}
+
 @media only screen and (max-width: 600px) {
     .image-todo{
         width: 100% !important;
+        margin-left: 0;
     }
-    
 }
 

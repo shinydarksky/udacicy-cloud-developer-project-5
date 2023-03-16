@@ -11,45 +11,68 @@ export default class TopNav extends Component<any, any> {
         this.props.history.replace('/');
     }
 
-    goProfile = () =>{
+    goProfile = () => {
         this.props.history.replace('/profile');
     }
 
-    onLogout = () =>{
+    onLogout = () => {
         this.props.onLogout()
+    }
+
+    goAbout = () => {
+        this.props.history.replace('/about');
     }
 
     render() {
         const { activeItem } = this.state
+
+        const isLoggedIn = localStorage.getItem("isLoggedIn")
 
         return (
             <Menu secondary>
                 <Menu.Item
                     name='Home'
                     active={activeItem === 'Home'}
-                    onClick={(e,{name})=>{
-                        this.handleItemClick(e,{name})
+                    onClick={(e, { name }) => {
+                        this.handleItemClick(e, { name })
                         this.goHome()
                     }}
                 />
-                <Menu.Item
-                    name='User'
-                    active={activeItem === 'User'}
-                    onClick={(e,{name})=>{
-                        this.handleItemClick(e,{name})
-                        this.goProfile()
-                    }}
-                />
-                <Menu.Menu position='right'>
-                    <Menu.Item>
-                        <Input icon='search' placeholder='Search...' />
-                    </Menu.Item>
+                {isLoggedIn &&
                     <Menu.Item
-                        name='logout'
-                        active={activeItem === 'logout'}
-                        onClick={this.onLogout}
+                        name='Profile'
+                        active={activeItem === 'Profile'}
+                        onClick={(e, { name }) => {
+                            this.handleItemClick(e, { name })
+                            this.goProfile()
+                        }}
                     />
-                </Menu.Menu>
+                }
+
+                {isLoggedIn &&
+                    <>
+                        <Menu.Item
+                            name='about'
+                            active={activeItem === 'about'}
+                            onClick={(e, { name }) => {
+                                this.handleItemClick(e, { name })
+                                this.goAbout()
+                            }}
+                        />
+                        <Menu.Menu position='right'>
+                            <Menu.Item>
+                                <Input icon='search' placeholder='Search...' onChange={(e, { value }) => {
+                                    this.props.history.replace(`/?search=${value}`)
+                                }} />
+                            </Menu.Item>
+                            <Menu.Item
+                                name='logout'
+                                active={activeItem === 'logout'}
+                                onClick={this.onLogout}
+                            />
+                        </Menu.Menu>
+                    </>
+                }
             </Menu>
         )
     }
