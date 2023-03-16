@@ -1,0 +1,9 @@
+version: "3.7"
+
+services:
+  app:
+    image: learning-docker/vue:v1
+    ports:
+      - "5000:80"
+    restart: unless-stoppeddocker-compose up -d
+    
