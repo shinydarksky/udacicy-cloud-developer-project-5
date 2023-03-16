@@ -129,7 +129,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/about"
           exact
           render={props => {
-            return <About {...props} />
+            return <About  />
           }}
         />
         <Route component={NotFound} />

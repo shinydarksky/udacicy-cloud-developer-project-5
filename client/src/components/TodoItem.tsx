@@ -17,7 +17,7 @@ export default function TodoItem({ todos, onTodoDelete, onEditButtonClick, onTod
     const [deleteItem, setDeleteItem] = useState<{ id?: string, createdAt?: string }>({})
 
     let query = useQuery();
-    const searchQuery = query.get('search')
+    let searchQuery = query.get('search')
 
 
 
@@ -28,7 +28,7 @@ export default function TodoItem({ todos, onTodoDelete, onEditButtonClick, onTod
 
     const searchFilter = (todo: any) => {
 
-        if (searchQuery?.trim().length <= 0 || !searchQuery) return todo
+        if (searchQuery && searchQuery?.trim().length <= 0 || !searchQuery) return todo
         else {
             const nameSearch = todo.name.toLowerCase()
             const searchString = searchQuery.toLowerCase()

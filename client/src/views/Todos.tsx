@@ -29,7 +29,8 @@ interface TodosState {
   loadingTodos: boolean;
   nextKey:string,
   nextKeyList: Array<any>
-  limit:number
+  limit:number,
+  profile:any
 }
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
@@ -39,6 +40,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     nextKey:'',
     nextKeyList: [],
     limit:5,
+    profile:{}
   };
 
   async componentDidMount() {
@@ -52,15 +54,15 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);
 
-      const requestOptions = {
+      const requestOptions:any = {
         method: 'GET',
         headers: myHeaders,
         redirect: 'follow'
       };
 
-      fetch("https://dev-tkib8gnatghhblhe.us.auth0.com/userinfo", requestOptions)
+      fetch(`https://dev-tkib8gnatghhblhe.us.auth0.com/userinfo`, requestOptions)
         .then(response => response.json())
-        .then(result => {
+        .then((result:any) => {
           this.setState({profile:result})
         })
         .catch(error => console.log('error', error));

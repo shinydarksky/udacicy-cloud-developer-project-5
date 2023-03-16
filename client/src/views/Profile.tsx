@@ -8,7 +8,7 @@ export default function Profile({ auth }: any) {
         const myHeaders = new Headers();
         myHeaders.append("Authorization", `Bearer ${token}`);
 
-        const requestOptions = {
+        const requestOptions:any = {
             method: 'GET',
             headers: myHeaders,
             redirect: 'follow'

@@ -4,7 +4,7 @@ import { Input, Menu } from 'semantic-ui-react'
 export default class TopNav extends Component<any, any> {
     state = { activeItem: 'Home' }
 
-    handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+    handleItemClick = (e:any, { name }:any) => this.setState({ activeItem: name })
 
 
     goHome = () => {
