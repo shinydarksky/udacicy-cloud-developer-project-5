@@ -11,7 +11,9 @@ const logger = createLogger('todoAccess');
 export class TodoAccess {
   constructor(
     private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-    private readonly todosTable = process.env.TODOS_TABLE
+    private readonly todosTable = process.env.TODOS_TABLE,
+    private readonly bucketName = process.env.IMAGES_S3_BUCKET,
+    private readonly urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION, 10)
   ) {}
 
   async getTodos(userId: string,nextKey, limit, orderBy): Promise<{
@@ -111,5 +113,16 @@ export class TodoAccess {
         }
       })
       .promise();
+  }
+
+  async generateUploadUrl(userId: string, todoId: string): Promise<string> {
+    const s3 = new AWS.S3({ signatureVersion: 'v4' });
+    const signedUrl = s3.getSignedUrl('putObject', {
+      Bucket: this.bucketName,
+      Key: todoId,
+      Expires: this.urlExpiration
+    });
+    await this.saveImgUrl(userId, todoId, this.bucketName);
+    return signedUrl
   }
 }

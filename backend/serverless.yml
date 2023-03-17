@@ -14,7 +14,9 @@ provider:
     minimumCompressionSize: 1024
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
-  tracing: true
+  tracing: 
+      lambda: true
+      apiGateway: true 
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
     TODOS_TABLE: Todos-${self:provider.stage}
